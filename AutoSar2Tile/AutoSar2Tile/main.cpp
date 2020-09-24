@@ -68,17 +68,22 @@ int main(int argc, char *argv[])
 	//! 解析全局配置文件中的setting.xml中的itemstyle配置值
 	QString srcFolder = getGlobleSettingFieldValue("inputFolder", "path", "D:\input");
 	QString desFolder = getGlobleSettingFieldValue("outputFolder", "path", "D:\output");
+	Logger::CreateNewLogFile(QCoreApplication::applicationName());
+	if (!QDir(srcFolder).exists() || !QDir(desFolder).exists()) {
+		Logger::Message(QStringLiteral("当前监视的数据目录为%1，输出目录为%2").arg(srcFolder).arg(desFolder));
+		Logger::Message(QStringLiteral("请确认目录有效，否则程序无法正常监控"));
+	}
 
 	//！ 监视文件夹目录的变换，则处理更新指定目录下的内容
 	FileMoniter fileMoniter(srcFolder, desFolder);
 
 	//! 数据处理管理类
-	CesiumTileByEntwine cesiumTileByEntwine(nullptr);
+	CesiumTileByEntwine cesiumTileByEntwine(desFolder);
 
 	//！ 绑定文件监视类，发送信号给数据处理类更新处理
 	QObject::connect(&fileMoniter, SIGNAL(sigCommitReconRequest(const QString&)), &cesiumTileByEntwine, SLOT(UpdateTileChanged(const QString&)));
 
-	Logger::CreateNewLogFile(QCoreApplication::applicationName());
+	
 	//! 当前工作路径
 	QString curDirectory = QDir::toNativeSeparators(QCoreApplication::applicationDirPath());
 	Logger::Message(QStringLiteral("当前监视的数据目录为，只监视.txt文件，不监视目录：") + curDirectory);
