@@ -5,6 +5,7 @@
 #include "QTextStream"
 #include "QCoreApplication"
 #include "QTime"
+#include "QDebug"
 
 //唯一的日志实体
 static Logger* s_pInstance = nullptr;
@@ -129,5 +130,5 @@ void Logger::Writeln(const QString aValue)
 
 	file.close();
 
-
+	qDebug() << aValue;
 }

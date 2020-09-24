@@ -8,6 +8,7 @@
 #include "FileMoniter.h"
 #include "CesiumTileByEntwine.h"
 #include "Logger.h"
+#include "QDebug"
 
 QString getGlobleSettingFieldValue(QString xmlkey, QString attrskey, QString attrsValueDefault)
 {
@@ -78,7 +79,6 @@ int main(int argc, char *argv[])
 	QObject::connect(&fileMoniter, SIGNAL(sigCommitReconRequest(const QString&)), &cesiumTileByEntwine, SLOT(UpdateTileChanged(const QString&)));
 
 	Logger::CreateNewLogFile(QCoreApplication::applicationName());
-
 	//! 当前工作路径
 	QString curDirectory = QDir::toNativeSeparators(QCoreApplication::applicationDirPath());
 	Logger::Message(QStringLiteral("当前监视的数据目录为，只监视.txt文件，不监视目录：") + curDirectory);
