@@ -56,6 +56,11 @@ void CesiumTileByEntwine::UpdateTileChanged(const QString& fileNmaeNew)
 		m_inputFilenameForTile = fileName;
 	}
 
+	if (!QFile(m_inputFilenameForTile).exists()){
+		Logger::Error(QStringLiteral("不存在有效的las文件%1").arg(m_inputFilenameForTile));
+		return;
+	}
+
 	//!las调用entwine切片
 	QString baseDir = QDir::toNativeSeparators(QCoreApplication::applicationDirPath()).append("\\Third\\Entwine210");
 	QString proPath = QDir::toNativeSeparators(QCoreApplication::applicationDirPath()).append("\\Third\\Entwine210\\entwine.exe");
@@ -170,7 +175,7 @@ QString CesiumTileByEntwine::TransformTxt2las(QString fileName)
 	outLasFilename = QFileInfo(fileName).absolutePath() + "//" + "temp//" + QFileInfo(fileName).baseName() + "-temp.las";
 	bool outstate = SaveToFile(cloud, outtxtFilename);
 	//提示信息
-	if (outstate)
+	if (outstate && QFile(outtxtFilename).exists())
 	{
 		isDataTransformSucess = true;
 		Logger::Message(QStringLiteral("导出文件 [%1] 成功").arg(outtxtFilename));
@@ -203,7 +208,7 @@ QString CesiumTileByEntwine::TransformTxt2las(QString fileName)
 		Logger::Message(QStringLiteral("txt2las执行成功"));
 
 		//las2las赋予坐标系src信息las2las -i 3mDEM-temp.las -o out-3mDEM-temp.las -utm 47T  -meter -elevation_meter
-		QString outLaswithSrcFilename = QFileInfo(fileName).absolutePath() + "//" + QFileInfo(fileName).baseName() + "-srs" + "-temp.las";
+		QString outLaswithSrcFilename = QFileInfo(fileName).absolutePath() + "//temp//" + QFileInfo(fileName).baseName() + "-srs" + "-temp.las";
 		arg.clear();
 		arg.append(QString("-i"));
 		arg.append(QString("%1").arg(outLasFilename));
