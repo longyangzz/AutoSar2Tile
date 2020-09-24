@@ -48,7 +48,7 @@ void FileMoniter::slotDirectoryChanged(const QString&)
 	for (int n = 0; n < strListFileNames.size(); n++)
 	{
 		//commit recon request
-		QString strFilePath = m_strMonitorDirectory + "/" + strListFileNames[n];
+		QString strFilePath = m_strMonitorDirectory + "\\" + strListFileNames[n];
 		emit sigCommitReconRequest(strFilePath);
 	}
 

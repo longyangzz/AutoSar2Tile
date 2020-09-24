@@ -164,8 +164,28 @@ QString CesiumTileByEntwine::TransformTxt2las(QString fileName)
 
 	//! 根据指定的列生成标量色
 	PointCloud* cloud = new PointCloud(nullptr);
+	bool isReadSuc = false;
+	if (extension == "txt") {
+		isReadSuc = cloud->ReadFromFile(fileName);
+	}
+	
+	int ptNum = cloud->Size();
+	if (ptNum == 0) {
+		Logger::Message(QStringLiteral("从文件 [%1] 读取点云xyz坐标个数为0，无法进行后续转换!").arg(fileName));
+		return outLasFilename;
+	}
 
-	int scalefieldindex = 4;
+	//提示信息
+	if (isReadSuc)
+	{
+		isDataTransformSucess = true;
+		Logger::Message(QStringLiteral("从文件 [%1] 读取点云xyz坐标成功").arg(fileName));
+	}
+	else
+	{
+		Logger::Message(QStringLiteral("从文件 [%1] 读取点云xyz坐标失败!").arg(fileName));
+		return outLasFilename;
+	}
 
 	//! 写出位临时las文件
 	//！清空temp目录
@@ -283,62 +303,56 @@ bool CesiumTileByEntwine::SaveToFile(PointCloud* entity, QString filename)
 
 
 	//获取个数及颜色法向量等信息
-	//unsigned long number = pointCloud->Size();
-	bool writeField = false;
+	unsigned long number = pointCloud->Size();
+	bool writeField = true;
 
-	//std::vector<PointColor> scalarColors;
-	//if (pointCloud->GetCurrentScalarField())
-	//{
-	//	writeField = true;
-	//	scalarColors = pointCloud->GetCurrentScalarField()->GetColors();
-	//}
+	std::vector<PointColor> scalarColors = pointCloud->GetColors();
 
+	//写出数据
+	for (unsigned long i = 0; i != number; ++i)
+	{
+		//定义一个当前行变量
+		QString line;
 
-	////数据偏移量
-	//Point_3D shift = pointCloud->GetShift();
-
-	////写出数据
-	//for (unsigned long i = 0; i != number; ++i)
-	//{
-	//	//定义一个当前行变量
-	//	QString line;
-
-	//	//写入当前坐标
-	//	Point_3D point = Point_3D::FromArray(pointCloud->GetPoint(i).u);
+		//写入当前坐标
+		Point_3D point = Point_3D::FromArray(pointCloud->GetPoint(i).u);
 
 
-	//	/*libpt.SetCoordinates(point.x - shift.x, point.y - shift.y, point.z - shift.z);
-	//	pro->transform(libpt);*/
-	//	double temX = point.x - shift.x;
-	//	double temY = point.y - shift.y;
-	//	double temZ = point.z - shift.z;
-	//	poCT->Transform(1, &temX, &temY, &temZ);
+		/*libpt.SetCoordinates(point.x - shift.x, point.y - shift.y, point.z - shift.z);
+		pro->transform(libpt);*/
+		double temX = point.x;
+		double temY = point.y;
+		double temZ = point.z;
+		poCT->Transform(1, &temX, &temY, &temZ);
 
-	//	line.append(QString("%1").arg(temX, 0, 'f', 3));
-	//	line.append(" "); //添加分隔符
-	//	line.append(QString("%1").arg(temY, 0, 'f', 3));
-	//	line.append(" "); //添加分隔符
-	//	line.append(QString("%1").arg(temZ, 0, 'f', 3));
-	//	line.append(" "); //添加分隔符
+		line.append(QString("%1").arg(temX, 0, 'f', 3));
+		line.append(" "); //添加分隔符
+		line.append(QString("%1").arg(temY, 0, 'f', 3));
+		line.append(" "); //添加分隔符
+		line.append(QString("%1").arg(temZ, 0, 'f', 3));
+		line.append(" "); //添加分隔符
 
-	//					  //定义一个当前行变量存储颜色值
-	//	QString color;
-	//	if (writeField)
-	//	{
-	//		//添加rgb颜色
-	//		PointColor rgbColor = scalarColors[i];
-	//		color.append(" ");
-	//		color.append(QString::number(rgbColor[0]));
-	//		color.append(" ");
-	//		color.append(QString::number(rgbColor[1]));
-	//		color.append(" ");
-	//		color.append(QString::number(rgbColor[2]));
+		//定义一个当前行变量存储颜色值
+		QString color;
+		if (writeField)
+		{
+			//添加rgb颜色
+			PointColor rgbColor{255, 0, 0};
+			if (scalarColors.size() > 0 && i < scalarColors.size()) {
+				rgbColor = scalarColors[i];
+			}
+			color.append(" ");
+			color.append(QString::number(rgbColor[0]));
+			color.append(" ");
+			color.append(QString::number(rgbColor[1]));
+			color.append(" ");
+			color.append(QString::number(rgbColor[2]));
 
-	//		line.append(color);
-	//	}
+			line.append(color);
+		}
 
-	//	stream << line << "\n";
-	//}
+		stream << line << "\n";
+	}
 
 	file.close();
 	return true;
