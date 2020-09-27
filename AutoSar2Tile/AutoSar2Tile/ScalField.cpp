@@ -6,13 +6,17 @@
 
 ScalField::ScalField(QObject *parent)
 	: QObject(parent)
+	, m_colorSteps(50)
 {
 	m_name = "";
 	m_colorScales = ColorScale::DefualtColorScales();
 	m_currentColorScale = m_colorScales["Blue>Green>Yellow>Red"];
+
+	
 }
 
 ScalField::ScalField(QString name)
+    : m_colorSteps(50)
 {
 	m_name = name;
 	m_colorScales = ColorScale::DefualtColorScales();
