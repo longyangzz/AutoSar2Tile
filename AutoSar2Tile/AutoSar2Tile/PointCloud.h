@@ -5,6 +5,8 @@
 
 #include "GpBasicTypes.h"
 
+#include "ScalField.h"
+
 class PointCloud : public QObject
 {
 	Q_OBJECT
@@ -30,6 +32,9 @@ private:
 
 	//！ 颜色
 	std::vector<PointColor> scalarColors;
+
+	//！标量值容器
+	ScalField* m_curScaleField;
 };
 
 #endif // POINTCLOUD_H

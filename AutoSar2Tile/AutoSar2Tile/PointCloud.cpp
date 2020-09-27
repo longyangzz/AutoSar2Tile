@@ -9,6 +9,7 @@
 #include "QCoreApplication"
 PointCloud::PointCloud(QObject *parent)
 	: QObject(parent)
+	, m_curScaleField(nullptr)
 {
 
 }
@@ -105,6 +106,12 @@ bool PointCloud::ReadFromFile(QString fileName) {
 		//！ 如果=4则根据标量解析颜色
 		if (lineList.size() == 4) {
 			double curScale = lineList[3].toDouble(&scientificNotation);
+			if (!m_curScaleField)
+			{
+				m_curScaleField = new ScalField("sar");
+			}
+
+			m_curScaleField->AddData(curScale);
 		}
 
 		if (lineList.size() >= 6) {
@@ -116,6 +123,12 @@ bool PointCloud::ReadFromFile(QString fileName) {
 	}
 
 	file.close();
+
+	if (m_curScaleField)
+	{
+		m_curScaleField->Prepare();
+		m_rgbColors = m_curScaleField->GetColors();
+	}
 
 	return true;
 }

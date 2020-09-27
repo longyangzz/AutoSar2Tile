@@ -64,6 +64,18 @@
     <ClCompile Include="GeneratedFiles\Release\moc_PointCloud.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ScalField.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ScalField.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="ScalField.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorScale.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="FileMoniter.h">
@@ -73,6 +85,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="PointCloud.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ScalField.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -93,6 +108,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vector3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorScale.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
