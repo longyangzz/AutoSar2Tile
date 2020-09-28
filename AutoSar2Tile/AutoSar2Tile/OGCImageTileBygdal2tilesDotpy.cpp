@@ -36,6 +36,7 @@ void OGCImageTileBygdal2tilesDotpy::UpdateTileChanged(const QString& fileNmaeNew
 	QString runbatFile = QDir::toNativeSeparators(QCoreApplication::applicationDirPath()).append("\\scripts\\run.bat");
 
 	QString pythonexepath = getGlobleSettingFieldValue("image", "python", "");
+	QString zoom = getGlobleSettingFieldValue("image", "zoom", "2-10");
 
 	if (!QFile(pythonexepath).exists())
 	{
@@ -44,7 +45,7 @@ void OGCImageTileBygdal2tilesDotpy::UpdateTileChanged(const QString& fileNmaeNew
 	}
 
 	isDirExist(m_desDirectory);
-	//clearTempFiles(m_desDirectory);
+	clearTempFiles(m_desDirectory);
 	//! 当前第三方库目录下写出个run.bat文件，并执行
 	QFile file(runbatFile);
 	if (!file.open(QFile::WriteOnly | QFile::Truncate))
@@ -58,7 +59,7 @@ void OGCImageTileBygdal2tilesDotpy::UpdateTileChanged(const QString& fileNmaeNew
 	stream << line << "\r\n";
 
 	line.clear();
-	line.append(QString("%1 %2 %3 %4 --zoom=%5").arg("start python").arg(proPath).arg(fileNmaeNew).arg(m_desDirectory).arg("2-10"));
+	line.append(QString("%1 %2 %3 %4 --zoom=%5").arg("start python").arg(proPath).arg(fileNmaeNew).arg(m_desDirectory).arg(zoom));
 	stream << line << "\r\n";
 	file.close();
 	//3-带空格，使用带參模式。能够启动
@@ -69,7 +70,7 @@ void OGCImageTileBygdal2tilesDotpy::UpdateTileChanged(const QString& fileNmaeNew
 	arg.append(QString("%1").arg(fileNmaeNew));
 	arg.append(QString("%1").arg(m_desDirectory));
 	arg.append(QString("--zoom"));
-	arg.append(QString("%1").arg("2-10"));
+	arg.append(QString("%1").arg(zoom));
 	bool status = process->startDetached(pythonexepath, arg);
 	if (status)
 	{

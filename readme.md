@@ -14,7 +14,7 @@
 
 
 
-## 如何使用
+## （一）点云切片如何使用
 
 1、配置setting.xml中的本地文件目录；
 
@@ -31,3 +31,21 @@
 2、基于cesium以http服务形式加载3dtiles：
 
 ​     个人电脑上使用[H:\2.code\github\Cesium-1.70\Apps\Sandcastle\demo\CZML Polygon.html]例子改写测试，并将该html存放到本项目下名称为[pntsDEMO.html]
+
+## （二）tiff切片如何使用
+
+1、配置setting.xml中的本地文件目录；
+
+2、setting.xml中配置
+
+<image zoom="2-10" python="C:\Users\wly\AppData\Local\Programs\Python\Python37\python.exe">
+    </image>
+
+3、配置gdal环境变量
+
+4、安装gdal的python绑定  
+
+···
+
+5、使用例子数据放入到监控目录里，输出目录下有数据生成，即配置成功，可正常运行。
+

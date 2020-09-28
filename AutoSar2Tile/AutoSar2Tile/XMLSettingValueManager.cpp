@@ -86,7 +86,14 @@ bool isDirExist(QString fullPath)
 
 void clearTempFiles(const QString& temp_path)
 {
+
+
 	QDir Dir(temp_path);
+	QStringList filters;
+	filters << QString("*.xml") << QString("*.html");
+	Dir.setFilter(QDir::Files | QDir::NoSymLinks); //设置类型过滤器，只为文件格式
+	Dir.setNameFilters(filters);
+
 	if (!Dir.exists())
 	{
 		Logger::Message(QStringLiteral("临时文件文件夹%1不存在").arg(temp_path));
@@ -95,12 +102,21 @@ void clearTempFiles(const QString& temp_path)
 
 	// 第三个参数是QDir的过滤参数，这三个表示收集所有文件和目录，且不包含"."和".."目录。
 	// 因为只需要遍历第一层即可，所以第四个参数填QDirIterator::NoIteratorFlags
-	QDirIterator DirsIterator(temp_path, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
+	QDirIterator DirsIterator(temp_path, filters, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
 	while (DirsIterator.hasNext())
 	{
+		
+		if (QFileInfo(DirsIterator.filePath()).suffix() == "config")
+		{
+			//DirsIterator.next();
+			//qDebug() << "filePath00:" << DirsIterator.filePath();  //包含文件名的文件的全路径
+		}
+		
 		if (!Dir.remove(DirsIterator.next())) // 删除文件操作如果返回否，那它就是目录
 		{
+			//qDebug() << "filePath:" << DirsIterator.filePath();  //包含文件名的文件的全路径
 			QDir(DirsIterator.filePath()).removeRecursively(); // 删除目录本身以及它下属所有的文件及目录
 		}
+		
 	}
 }
