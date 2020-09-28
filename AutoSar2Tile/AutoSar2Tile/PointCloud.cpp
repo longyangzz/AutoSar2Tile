@@ -7,6 +7,8 @@
 #include "QDebug"
 #include "QTime"
 #include "QCoreApplication"
+#include "XMLSettingValueManager.h"
+
 PointCloud::PointCloud(QObject *parent)
 	: QObject(parent)
 	, m_curScaleField(nullptr)
@@ -45,15 +47,6 @@ DCVector3D PointCloud::GetPoint(unsigned index)
 	return m_points[index];
 }
 
-void Sleep(unsigned int msec)
-{
-	QTime reachTime = QTime::currentTime().addMSecs(msec);
-	while (QTime::currentTime() < reachTime)
-	{
-		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-	}
-
-}
 
 //! 从文本文件中加载点云坐标，xyz，4列的话，根据第四列生成颜色
 bool PointCloud::ReadFromFile(QString fileName) {

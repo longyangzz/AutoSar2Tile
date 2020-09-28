@@ -14,6 +14,8 @@
 #include "QProcess"
 #include "QTextStream"
 
+#include "XMLSettingValueManager.h"
+
 CesiumTileByEntwine::CesiumTileByEntwine(QString desFolder)
 {
 	isDataTransformSucess = false;
@@ -23,20 +25,6 @@ CesiumTileByEntwine::CesiumTileByEntwine(QString desFolder)
 CesiumTileByEntwine::~CesiumTileByEntwine()
 {
 
-}
-
-bool isDirExist(QString fullPath)
-{
-	QDir dir(fullPath);
-	if (dir.exists())
-	{
-		return true;
-	}
-	else
-	{
-		bool ok = dir.mkdir(fullPath);//只创建一级子目录，即必须保证上级目录存在
-		return ok;
-	}
 }
 
 //! 根据输入数据组装，计算程序，进行计算输出
@@ -121,26 +109,6 @@ void CesiumTileByEntwine::UpdateTileChanged(const QString& fileNmaeNew)
 	int a = 6;
 }
 
-void CesiumTileByEntwine::clearTempFiles(const QString& temp_path)
-{
-	QDir Dir(temp_path);
-	if (!Dir.exists())
-	{
-		Logger::Message(QStringLiteral("临时文件文件夹%1不存在").arg(temp_path));
-		return;
-	}
-
-	// 第三个参数是QDir的过滤参数，这三个表示收集所有文件和目录，且不包含"."和".."目录。
-	// 因为只需要遍历第一层即可，所以第四个参数填QDirIterator::NoIteratorFlags
-	QDirIterator DirsIterator(temp_path, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
-	while (DirsIterator.hasNext())
-	{
-		if (!Dir.remove(DirsIterator.next())) // 删除文件操作如果返回否，那它就是目录
-		{
-			QDir(DirsIterator.filePath()).removeRecursively(); // 删除目录本身以及它下属所有的文件及目录
-		}
-	}
-}
 
 void clearFiles(const QString &folderFullPath)
 {

@@ -15,8 +15,6 @@ public:
 	QString TransformTxt2las(QString fileName);
 	bool SaveToFile(PointCloud* pointcloud, QString filename);
 
-	void clearTempFiles(const QString& temp_path);
-protected slots:
 	void UpdateTileChanged(const QString& strDirectory);
 
 private:
