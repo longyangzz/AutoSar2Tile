@@ -14,7 +14,7 @@
 
 
 
-## （一）点云切片如何使用
+## 1.1点云切片如何使用
 
 1、配置setting.xml中的本地文件目录；
 
@@ -24,7 +24,7 @@
 
 
 
-## 切片结果pnts如何可视化
+## 1.2切片结果pnts如何可视化
 
 1、发布iis服务：F:\IISDataCenter\China\gansu\baigedem【http://localhost:8062/baige/】
 
@@ -32,13 +32,13 @@
 
 ​     个人电脑上使用[H:\2.code\github\Cesium-1.70\Apps\Sandcastle\demo\CZML Polygon.html]例子改写测试，并将该html存放到本项目下名称为[pntsDEMO.html]
 
-## （二）tiff切片如何使用
+## 2.1tiff切片如何使用
 
 1、配置setting.xml中的本地文件目录；
 
 2、setting.xml中配置
 
-<image zoom="2-10" python="C:\Users\wly\AppData\Local\Programs\Python\Python37\python.exe">
+<image zoom="10-18" python="C:\Users\wly\AppData\Local\Programs\Python\Python37\python.exe">
     </image>
 
 3、配置gdal环境变量
@@ -49,3 +49,10 @@
 
 5、使用例子数据放入到监控目录里，输出目录下有数据生成，即配置成功，可正常运行。
 
+## 2.2 tif切片后的tile img怎么在cesium可视化
+
+![image-20200928201232223](H:\2.code\github\AutoSar2Tile\screenshot\image-openlayers.png)
+
+1、输出的切片目录建立iis服务
+
+2、

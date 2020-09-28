@@ -28,7 +28,7 @@ OGCImageTileBygdal2tilesDotpy::~OGCImageTileBygdal2tilesDotpy()
 
 void OGCImageTileBygdal2tilesDotpy::UpdateTileChanged(const QString& fileNmaeNew)
 {
-	Sleep(100);
+	Sleep(1000 * 10);
 
 	//! 1、启动gdal2tiles.py，传入文件参数
 	QString baseDir = QDir::toNativeSeparators(QCoreApplication::applicationDirPath()).append("\\scripts");

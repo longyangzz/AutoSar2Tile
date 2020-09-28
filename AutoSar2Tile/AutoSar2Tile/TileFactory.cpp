@@ -29,9 +29,9 @@ void TileFactory::UpdateTileChanged(const QString& fileNmaeNew)
 
 	while (!QFile(fileNmaeNew).exists())
 	{
-		Sleep(1000);
+		Sleep(1000 * 10);
 	}
-
+	Sleep(1000 * 10);
 	//txtתlas
 	if (extension == "txt")
 	{
@@ -40,7 +40,7 @@ void TileFactory::UpdateTileChanged(const QString& fileNmaeNew)
 		CesiumTileByEntwine cesiumTileByEntwine(m_desDirectory);
 		cesiumTileByEntwine.UpdateTileChanged(fileNmaeNew);
 	}
-	else {
+	else if (extension.toUpper() == "TIF" || extension.toUpper() == "TIFF") {
 		OGCImageTileBygdal2tilesDotpy ogcImageTileBygdal2tilesDotpy(m_desDirectory);
 		ogcImageTileBygdal2tilesDotpy.UpdateTileChanged(fileNmaeNew);
 	}
