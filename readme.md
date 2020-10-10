@@ -55,4 +55,40 @@
 
 1、输出的切片目录建立iis服务
 
-2、
+2、在cesium中使用xyz格式调用
+
+## 2.3 使用的gdal2tiles细节说明
+
+1、使用的脚本存放于scirpts目录下；
+
+2、gdal2tiles需要使用像素深度为8位的数据，使用镶嵌到新栅格可以处理；
+
+3、测试成功的例子使用的原始坐标为4326
+
+4、测试数据及命令为：
+
+python H:\2.code\github\AutoSar2Tile\AutoSar2Tile\x64\AutoSar2Tile\scripts\gdal2tiles.py D:\data\fsdsar\test\tongluclip8.tif D:\output\tonglu --zoom=0-18 --s_srs=EPSG:4326 --xyz
+
+5、使用的python下载地址为：https://github.com/CjS77/gdal2tiles https://github.com/longyangzz/gdal2tiles-1
+
+6、切片结果发布为iis服务，设置跨域http响应头，添加Access-Control-Allow-Origin 值为*即可。
+
+7、在cesium中调用示例为：
+
+```
+var xyz2 = new Cesium.UrlTemplateImageryProvider({
+  url: 'http://localhost:8063/{z}/{x}/{y}.png', //服务地址
+  //tilingScheme: new Cesium.GeographicTilingScheme()
+})
+
+var viewer = new Cesium.Viewer("cesiumContainer", {
+  imageryProvider: xyz2
+});
+
+viewer.camera.flyTo({
+          destination : Cesium.Cartesian3.fromDegrees(119.18871379902474,29.75981714010474, 150.0)
+        });
+```
+
+8、测试成功的数据及调用html存放于data目录下的test子目录
+

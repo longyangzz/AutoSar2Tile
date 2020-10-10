@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <meta name="description" content="CZML Polygon" />
+    <meta name="cesium-sandcastle-labels" content="CZML" />
+    <title>Cesium Demo</title>
+    <script type="text/javascript" src="../Sandcastle-header.js"></script>
+    <script
+      type="text/javascript"
+      src="../../../Build/CesiumUnminified/Cesium.js"
+      nomodule
+    ></script>
+    <script type="module" src="../load-cesium-es6.js"></script>
+  </head>
+  <body
+    class="sandcastle-loading"
+    data-sandcastle-bucket="bucket-requirejs.html"
+  >
+    <style>
+      @import url(../templates/bucket.css);
+    </style>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="loadingOverlay"><h1>Loading...</h1></div>
+    <div id="toolbar"></div>
+
+    <script id="cesium_sandcastle_script">
+      function LoadCloudPoint(viewer) {
+        tileset = viewer.scene.primitives.add(new Cesium.Cesium3DTileset({
+          url: "http://hsfx.bjdclw.com:8062/baige/tileset.json",
+        }));
+
+        tileset.readyPromise.then(function () {
+          var bounding = (tileset._root._boundingVolume);
+          var center = bounding.boundingSphere.center;
+          var cart = Cesium.Ellipsoid.WGS84.cartesianToCartographic(center);
+
+          var dest = Cesium.Cartesian3.fromDegrees(
+                  cart.longitude * (180 / Math.PI),
+                  cart.latitude * (180 / Math.PI),
+                  bounding._boundingSphere.radius * 1.2);
+
+          viewer.camera.setView({ destination: dest });
+        });
+      }
+
+      function startup(Cesium) {
+        "use strict";
+
+        //! 谷歌中国影像
+        var yxgoogleBasicLayer = new Cesium.UrlTemplateImageryProvider({
+          url:'http://www.google.cn/maps/vt?lyrs=s@800&x={x}&gl=en&y={y}&z={z}',
+          tilingScheme:new Cesium.WebMercatorTilingScheme(),
+          minimumLevel:1,
+          maximumLevel:20
+        });
+
+        var yxtdtimageryProvider = new Cesium.WebMapTileServiceImageryProvider({
+          url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=46a08ed576eb9ad93d6a465a55544a5b",
+          layer: "tdtBasicLayer",
+          style: "default",
+          format: "image/jpeg",
+          tileMatrixSetID: "GoogleMapsCompatible",
+          show: true
+        })
+        var tms = new Cesium.TileMapServiceImageryProvider({
+          url : 'http://localhost:8062/',
+          fileExtension: 'png',
+          maximumLevel: 8,
+          rectangle: new Cesium.Rectangle(
+                  Cesium.Math.toRadians(98.2333036477),
+                  Cesium.Math.toRadians(36.09228167748571),
+                  Cesium.Math.toRadians(98.252399510),
+                  Cesium.Math.toRadians(36.11308301718))
+        });
+
+        var tms1 = new Cesium.UrlTemplateImageryProvider({
+          url : Cesium.buildModuleUrl('http://localhost:8063/') + '/{z}/{x}/{reverseY}.png',
+          credit : '© Analytical Graphics, Inc.',
+          tilingScheme : new Cesium.GeographicTilingScheme()
+        });
+
+        var tms2 = new Cesium.UrlTemplateImageryProvider({
+          url : Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII') + '/{z}/{x}/{reverseY}.jpg',
+          credit : '© Analytical Graphics, Inc.',
+          tilingScheme : new Cesium.GeographicTilingScheme(),
+          maximumLevel : 5
+        });
+        var xyz1 = new Cesium.UrlTemplateImageryProvider({
+          url: 'http://localhost:9000/image/8378c9500a9811ebb52315f0b690aad8/{z}/{x}/{y}', //服务地址
+          //tilingScheme: new Cesium.GeographicTilingScheme()
+        })
+
+        var xyz2 = new Cesium.UrlTemplateImageryProvider({
+          url: 'http://localhost:8063/{z}/{x}/{y}.png', //服务地址
+          //tilingScheme: new Cesium.GeographicTilingScheme()
+        })
+
+        var viewer = new Cesium.Viewer("cesiumContainer", {
+          imageryProvider: xyz2
+        });
+
+        //! 加载发布的点云http://localhost:8062/baige/
+        //LoadCloudPoint(viewer);
+        //minx="98.23330364774012" miny="36.09228167748571" maxx="98.25239951042461" maxy="36.11308301718000"
+
+
+         //viewer.imageryLayers.addImageryProvider(tms1);
+        //! 根据提供的csv文件，解析为网格，并使用位移值赋色
+
+        viewer.camera.flyTo({
+          destination : Cesium.Cartesian3.fromDegrees(119.18871379902474,29.75981714010474, 150.0)
+        });
+
+        //Sandcastle_End
+        Sandcastle.finishedLoading();
+      }
+      if (typeof Cesium !== "undefined") {
+        window.startupCalled = true;
+        startup(Cesium);
+      }
+    </script>
+  </body>
+</html>
