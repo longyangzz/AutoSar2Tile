@@ -59,7 +59,7 @@ void OGCImageTileBygdal2tilesDotpy::UpdateTileChanged(const QString& fileNmaeNew
 	stream << line << "\r\n";
 
 	line.clear();
-	line.append(QString("%1 %2 %3 %4 --zoom=%5").arg("start python").arg(proPath).arg(fileNmaeNew).arg(m_desDirectory).arg(zoom));
+	line.append(QString("%1 %2 %3 %4 --zoom=%5 --xyz").arg("start python").arg(proPath).arg(fileNmaeNew).arg(m_desDirectory).arg(zoom));
 	stream << line << "\r\n";
 	file.close();
 	//3-带空格，使用带參模式。能够启动
@@ -71,6 +71,8 @@ void OGCImageTileBygdal2tilesDotpy::UpdateTileChanged(const QString& fileNmaeNew
 	arg.append(QString("%1").arg(m_desDirectory));
 	arg.append(QString("--zoom"));
 	arg.append(QString("%1").arg(zoom));
+	arg.append(QString("%1").arg("--xyz"));
+	
 	bool status = process->startDetached(pythonexepath, arg);
 	if (status)
 	{

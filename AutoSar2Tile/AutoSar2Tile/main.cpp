@@ -38,6 +38,8 @@ int main(int argc, char *argv[])
 	
 	//! 当前工作路径
 	QString curDirectory = QDir::toNativeSeparators(QCoreApplication::applicationDirPath());
-	Logger::Message(QStringLiteral("当前监视的数据目录为，只监视.txt文件，不监视目录：") + curDirectory);
+	Logger::Message(QStringLiteral("当前工作目录为%1，只监视.txt文件，不监视目录：").arg(curDirectory));
+	Logger::Message(QStringLiteral("当前监视的数据目录为%1，只监视.txt文件，不监视目录：").arg(srcFolder));
+	Logger::Message(QStringLiteral("当前数据输出目录为%1，只监视.txt文件，不监视目录：").arg(desFolder));
 	return a.exec();
 }
