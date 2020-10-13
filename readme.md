@@ -92,3 +92,13 @@ viewer.camera.flyTo({
 
 8、测试成功的数据及调用html存放于data目录下的test子目录
 
+## 3.1 csv中点坐标及标量色识别切片
+
+原始数据格式
+
+![image-20201013114532650](H:\2.code\github\AutoSar2Tile\screenshot\image-csvdata.png)
+
+提取有效数据列：EFG列是坐标，J列是位移
+
+切片结果目录：
+
