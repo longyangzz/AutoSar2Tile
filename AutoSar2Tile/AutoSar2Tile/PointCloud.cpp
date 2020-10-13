@@ -1,5 +1,7 @@
 #include "PointCloud.h"
 
+#include "math.h"
+
 #include "QFile"
 #include "Logger.h"
 #include "QTextStream"
@@ -8,6 +10,8 @@
 #include "QTime"
 #include "QCoreApplication"
 #include "XMLSettingValueManager.h"
+
+#include "ReadCsvData.h"
 
 PointCloud::PointCloud(QObject *parent)
 	: QObject(parent)
@@ -18,7 +22,11 @@ PointCloud::PointCloud(QObject *parent)
 
 PointCloud::~PointCloud()
 {
-
+	if (m_curScaleField)
+	{
+		delete m_curScaleField;
+		m_curScaleField = nullptr;
+	}
 }
 
 unsigned long PointCloud::Size()
@@ -123,5 +131,50 @@ bool PointCloud::ReadFromFile(QString fileName) {
 		m_rgbColors = m_curScaleField->GetColors();
 	}
 
+	return true;
+}
+//! 从csv文件中加载点云坐标EFG列是坐标，J列是位移，根据第J列生成颜色
+bool PointCloud::ReadFromCSVFile(QString fileName) {
+
+	Sleep(100);
+
+	//指定文件路径
+	std::string aa = fileName.toStdString();
+	const char* path = aa.c_str();
+																	//初始化CSVreader类对象
+	CSVreader reader(path);
+	// 跳过3行
+	int ignoreLine = 4;
+	for (int i = 0; i < ignoreLine; ++i)
+	{
+		reader.readline();
+	}
+
+	//解析数据
+	while (!reader.readline())
+	{
+		//得到原始数据，存储给点云类
+		if (isnan(reader.data[4]) || isnan(reader.data[5]) || isnan(reader.data[6]) || isnan(reader.data[9]))
+		{
+			continue;
+		}
+		
+		DCVector3D pt(reader.data[4], reader.data[5], reader.data[6]);
+
+		double curScale = reader.data[9];
+		if (!m_curScaleField)
+		{
+			m_curScaleField = new ScalField("sar");
+		}
+
+		m_curScaleField->AddData(curScale);
+		m_points.push_back(pt);
+	}
+
+	if (m_curScaleField)
+	{
+		m_curScaleField->Prepare();
+		m_rgbColors = m_curScaleField->GetColors();
+	}
 	return true;
 }

@@ -97,6 +97,9 @@
     <ClCompile Include="XMLSettingValueManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ReadCsvData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="FileMoniter.h">
@@ -141,6 +144,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="XMLSettingValueManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadCsvData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

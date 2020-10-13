@@ -33,7 +33,7 @@ void TileFactory::UpdateTileChanged(const QString& fileNmaeNew)
 	}
 	Sleep(1000 * 10);
 	//txt转las
-	if (extension == "txt")
+	if (extension == "txt" || extension.toUpper() == "CSV")
 	{
 		//! 执行转换为las，写出并传递给
 		//! 数据处理管理类

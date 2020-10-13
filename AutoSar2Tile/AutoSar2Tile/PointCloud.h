@@ -23,6 +23,8 @@ public:
 	DCVector3D GetPoint(unsigned index);
 
 	bool ReadFromFile(QString fileName);
+	bool ReadFromCSVFile(QString fileName);
+	
 private:
 	//µãÊý¾Ý
 	std::vector<DCVector3D> m_points;

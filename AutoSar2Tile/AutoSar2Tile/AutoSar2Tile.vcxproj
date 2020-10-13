@@ -204,6 +204,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OGCImageTileBygdal2tilesDotpy.cpp" />
     <ClCompile Include="PointCloud.cpp" />
+    <ClCompile Include="ReadCsvData.cpp" />
     <ClCompile Include="ScalField.cpp" />
     <ClCompile Include="TileFactory.cpp" />
     <ClCompile Include="XMLSettingValueManager.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="GpBasicTypes.h" />
     <ClInclude Include="ColorScale.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="ReadCsvData.h" />
     <ClInclude Include="XMLSettingValueManager.h" />
     <CustomBuild Include="ScalField.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

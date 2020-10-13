@@ -100,5 +100,11 @@ viewer.camera.flyTo({
 
 提取有效数据列：EFG列是坐标，J列是位移
 
+
+
+颜色条范围：Blue>Green>Yellow>Red
+
+颜色阶数：50
+
 切片结果目录：
 

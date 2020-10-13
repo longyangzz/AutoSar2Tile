@@ -35,7 +35,7 @@ void CesiumTileByEntwine::UpdateTileChanged(const QString& fileNmaeNew)
 	QString extension = QFileInfo(fileName).suffix();
 
 	//txt转las
-	if (extension == "txt")
+	if (extension == "txt" || extension.toUpper() == "CSV")
 	{
 		//! 执行转换为las，写出并传递给
 		m_inputFilenameForTile = TransformTxt2las(fileName);
@@ -135,11 +135,20 @@ QString CesiumTileByEntwine::TransformTxt2las(QString fileName)
 	bool isReadSuc = false;
 	if (extension == "txt") {
 		isReadSuc = cloud->ReadFromFile(fileName);
+	}else if (extension.toUpper() == "CSV")
+	{
+		isReadSuc = cloud->ReadFromCSVFile(fileName);
 	}
 	
 	int ptNum = cloud->Size();
 	if (ptNum == 0) {
 		Logger::Message(QStringLiteral("从文件 [%1] 读取点云xyz坐标个数为0，无法进行后续转换!").arg(fileName));
+
+		if (cloud)
+		{
+			delete cloud;
+			cloud = nullptr;
+		}
 		return outLasFilename;
 	}
 
@@ -152,6 +161,11 @@ QString CesiumTileByEntwine::TransformTxt2las(QString fileName)
 	else
 	{
 		Logger::Message(QStringLiteral("从文件 [%1] 读取点云xyz坐标失败!").arg(fileName));
+		if (cloud)
+		{
+			delete cloud;
+			cloud = nullptr;
+		}
 		return outLasFilename;
 	}
 
@@ -171,6 +185,11 @@ QString CesiumTileByEntwine::TransformTxt2las(QString fileName)
 	else
 	{
 		Logger::Message(QStringLiteral("导出文件 [%1] 失败!").arg(outtxtFilename));
+		if (cloud)
+		{
+			delete cloud;
+			cloud = nullptr;
+		}
 		return outLasFilename;
 	}
 
@@ -219,9 +238,19 @@ QString CesiumTileByEntwine::TransformTxt2las(QString fileName)
 	}
 	else {
 		Logger::Message(process->errorString());
+		if (cloud)
+		{
+			delete cloud;
+			cloud = nullptr;
+		}
 		return outLasFilename;
 	}
 
+	if (cloud)
+	{
+		delete cloud;
+		cloud = nullptr;
+	}
 	return outLasFilename;
 }
 
