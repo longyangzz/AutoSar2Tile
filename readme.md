@@ -106,5 +106,8 @@ viewer.camera.flyTo({
 
 颜色阶数：50
 
+![image-20201013171439449](H:\2.code\github\AutoSar2Tile\screenshot\image-colorscale.png)
+
 切片结果目录：
 
+![image-20201013171516227](H:\2.code\github\AutoSar2Tile\screenshot\image-csvcloud.png)
