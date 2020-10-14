@@ -1,7 +1,7 @@
 #include "FileMoniter.h"
 #include "QFileSystemWatcher"
 #include "QDir"
-
+#include "Logger.h"
 FileMoniter::FileMoniter(const QString& strDirectory, QString desDirectory)
 {
 	m_strListFileNames.clear();
@@ -49,6 +49,8 @@ void FileMoniter::slotDirectoryChanged(const QString&)
 	{
 		//commit recon request
 		QString strFilePath = m_strMonitorDirectory + "\\" + strListFileNames[n];
+
+		Logger::Message(QStringLiteral("监测到的新增文件为%1").arg(strFilePath));
 		emit sigCommitReconRequest(strFilePath);
 	}
 
