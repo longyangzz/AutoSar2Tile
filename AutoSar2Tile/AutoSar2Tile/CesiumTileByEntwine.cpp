@@ -126,8 +126,8 @@ QString CesiumTileByEntwine::TransformTxt2las(QString fileName)
 	
 	//! 使用io插件读取txt
 	bool isGenrgb = true;
-	QString wktSrccoord = "EPSG:4542";
-	QString wktDescoord = "EPSG:32647";
+	QString wktSrccoord = getGlobleSettingFieldValue("pnts", "src", "EPSG:4543");
+	QString wktDescoord = getGlobleSettingFieldValue("pnts", "des", "EPSG:32647");
 	QString extension = QFileInfo(fileName).suffix();
 
 	//! 根据指定的列生成标量色
@@ -256,8 +256,8 @@ QString CesiumTileByEntwine::TransformTxt2las(QString fileName)
 
 bool CesiumTileByEntwine::SaveToFile(PointCloud* entity, QString filename)
 {
-	QString wktSrccoord = "EPSG:4542";
-	QString wktDescoord = "EPSG:32647";
+	QString wktSrccoord = getGlobleSettingFieldValue("pnts", "src", "EPSG:4543");
+	QString wktDescoord = getGlobleSettingFieldValue("pnts", "des", "EPSG:32647");
 
 	//!使用liblas对 srs坐标点，投影为out类型
 	QString gdalDatadir = QCoreApplication::applicationDirPath() + "\\gdal-data";

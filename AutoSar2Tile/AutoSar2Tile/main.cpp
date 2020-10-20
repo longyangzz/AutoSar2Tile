@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
 	
 	//! 当前工作路径
 	QString curDirectory = QDir::toNativeSeparators(QCoreApplication::applicationDirPath());
+	Logger::Message(QStringLiteral("版权所有：北京富斯德"));
 	Logger::Message(QStringLiteral("当前工作目录为%1，只监视.txt | .csv文件，不监视目录：").arg(curDirectory));
 	Logger::Message(QStringLiteral("当前监视的数据目录为%1，只监视.txt文件  | .csv文件，不监视目录：").arg(srcFolder));
 	Logger::Message(QStringLiteral("当前数据输出目录为%1，只监视.txt文件，不监视目录：").arg(desFolder));
