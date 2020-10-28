@@ -113,10 +113,10 @@ bool PointCloud::ReadFromFile(QString fileName) {
 			}
 
 			m_curScaleField->AddData(curScale);
-		}
-
-		if (lineList.size() >= 6) {
+		}else if (lineList.size() >= 6) {
 			//!直接rgbcolor读入
+			RGBColor color = { lineList[3].toInt(&scientificNotation), lineList[4].toInt(&scientificNotation), lineList[5].toInt(&scientificNotation) };
+			m_rgbColors.push_back(color);
 		}
 
 		//将数据读取出来;
