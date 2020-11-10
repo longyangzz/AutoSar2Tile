@@ -26,9 +26,174 @@ OGCImageTileBygdal2tilesDotpy::~OGCImageTileBygdal2tilesDotpy()
 {
 }
 
+char* findImageTypeGDAL( char *pDstImgFileName)
+{
+	char *dstExtension = strlwr(strrchr(pDstImgFileName, '.') + 1);
+	char *Gtype = NULL;
+	if (0 == strcmp(dstExtension, "bmp")) Gtype = "BMP";
+	else if (0 == strcmp(dstExtension, "jpg")) Gtype = "JPEG";
+	else if (0 == strcmp(dstExtension, "png")) Gtype = "PNG";
+	else if (0 == strcmp(dstExtension, "tif")) Gtype = "GTiff";
+	else if (0 == strcmp(dstExtension, "gif")) Gtype = "GIF";
+	else Gtype = NULL;
+
+	return Gtype;
+}
+
+bool ReadImageData(unsigned char **pImageData, int &nWidth, int &nHeight, int &nChannels, const QString& strFilePath)
+{
+	GDALAllRegister();
+	GDALDataset *poDataset = NULL;
+
+	CPLSetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+
+	poDataset = (GDALDataset*)GDALOpen(strFilePath.toLocal8Bit(), GA_ReadOnly);
+	if (poDataset == NULL)
+	{
+		//qDebug()<<QString::fromLocal8Bit("%1 GDAL打开失败").arg(strFilePath);
+		GDALClose(poDataset);
+		return false;
+	}
+
+	nWidth = poDataset->GetRasterXSize();
+	nHeight = poDataset->GetRasterYSize();
+	nChannels = poDataset->GetRasterCount();
+
+	unsigned char *pImageDataIn = new unsigned char[nChannels * nWidth * nHeight];
+	*pImageData = pImageDataIn;
+	//ZeroMemory(*pImageData, nChannels * nWidth * nHeight);
+
+	for (int i = 1; i <= nChannels; ++i)
+	{
+		unsigned char *pImageOffset = *pImageData + i - 1;
+		GDALRasterBand* pBand = poDataset->GetRasterBand(i);
+
+		pBand->RasterIO(
+			GF_Read,
+			0, 0,
+			nWidth, nHeight,
+			pImageOffset,
+			nWidth, nHeight,
+			GDT_Byte,
+			nChannels,
+			0);
+	}
+
+	GDALClose(poDataset);
+	return true;
+}
+bool WriteImageData( char* strDestFilePath, unsigned char* pImageData, int nWidth, int nHeight, int nChannels, int nNewChannels)
+{
+	CPLSetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+
+	GDALAllRegister();
+
+	//QString strType;
+	//GetDriverType(strDestFilePath, strType);
+
+	char *GType = NULL;
+
+	GType = findImageTypeGDAL(strDestFilePath);
+	if (GType == NULL) { return false; }
+
+	GDALDriver *pMemDriver = NULL;
+	pMemDriver = GetGDALDriverManager()->GetDriverByName("MEM");
+	if (pMemDriver == NULL) { return false; }
+
+	GDALDataset * pMemDataSet = pMemDriver->Create("", nWidth, nHeight, nNewChannels, GDT_Byte, NULL);
+	GDALRasterBand *pBand = NULL;
+
+	for (int i = 1; i <= nNewChannels; i++)
+	{
+		if (i == nNewChannels && nNewChannels > nChannels)
+		{
+			unsigned char *pTempImageData = new unsigned char[nNewChannels*nWidth*nHeight];
+			memset(pTempImageData, 0xFE, nNewChannels*nWidth*nHeight);
+
+			pBand = pMemDataSet->GetRasterBand(i);
+			pBand->RasterIO(GF_Write,
+				0,
+				0,
+				nWidth,
+				nHeight,
+				pTempImageData,
+				nWidth,
+				nHeight,
+				GDT_Byte,
+				nNewChannels,
+				0);
+		}
+		else
+		{
+			pBand = pMemDataSet->GetRasterBand(i);
+			pBand->RasterIO(GF_Write,
+				0,
+				0,
+				nWidth,
+				nHeight,
+				pImageData + i - 1,
+				nWidth,
+				nHeight,
+				GDT_Byte,
+				nChannels,
+				0);
+		}
+	}
+
+	GDALDriver *pDstDriver = NULL;
+	pDstDriver = (GDALDriver *)GDALGetDriverByName(GType);
+	if (pDstDriver == NULL)
+	{
+		GDALClose(pMemDataSet);
+
+		return false;
+	}
+
+	GDALDataset * pDataSet = pDstDriver->CreateCopy(strDestFilePath, pMemDataSet, FALSE, NULL, NULL, NULL);
+	if (pDataSet == NULL)
+	{
+		GDALClose(pMemDataSet);
+
+		return false;
+	}
+
+	GDALClose(pDataSet);
+	GDALClose(pMemDataSet);
+
+	return true;
+}
+
 void OGCImageTileBygdal2tilesDotpy::UpdateTileChanged(const QString& fileNmaeNew)
 {
 	Sleep(1000 * 10);
+
+	//! 根据是否开启了png转换，决定切片还是png转换
+	QString validPng = getGlobleSettingFieldValue("pngtransform", "valid", "false");
+	QString imgname = getGlobleSettingFieldValue("pngtransform", "imgname", "guopupng");
+	
+	if (validPng == "true")
+	{
+		//!out 目录下写出同名png文件
+		unsigned char *pImageData = NULL;
+		int nWidth;
+		int nHeight;
+		int nChannels;
+		//QString strFilePath = "C:\\Users\\Administrator\\Desktop\\Geotiff_Deformation_Image_20201020125810.tiff";
+		bool readState = ReadImageData(&pImageData, nWidth, nHeight, nChannels, fileNmaeNew);
+		//char* strDestFilePath = "C:\\Users\\Administrator\\Desktop\\png2.png";
+		int nNewChannels = 3;
+
+		QString outpath = m_desDirectory + "\\" + imgname + ".png";
+		std::string aa = outpath.toStdString();
+		char* strDestFilePath = (char* )aa.c_str();
+		bool saveState = WriteImageData(strDestFilePath, pImageData, nWidth, nHeight, nChannels, nNewChannels);
+
+		if (saveState)
+		{
+			Logger::Message(QStringLiteral("tiff转写为png单幅图片调用成功"));
+			Logger::Message(QStringLiteral("tiff转写为png单幅图片调用成功,输出目录为%1").arg(outpath));
+		}
+	}
 
 	//! 1、启动gdal2tiles.py，传入文件参数
 	QString baseDir = QDir::toNativeSeparators(QCoreApplication::applicationDirPath()).append("\\scripts");
