@@ -90,6 +90,30 @@ bool ReadImageData(unsigned char **pImageData, int &nWidth, int &nHeight, int &n
 			GDT_Byte,
 			nChannels,
 			0);
+
+		//!´æ´¢Êý¾ÝpImageOffset
+		std::vector< std::vector<unsigned char > > srcData;
+		for (int row = 0; row < nHeight; ++row)
+		{
+			std::vector<unsigned char > temp;
+			for (int col = 0; col < nWidth; ++col)
+			{
+				unsigned char value = pImageDataIn[ (row * nWidth  + col) * 3 + (i - 1)];
+
+				temp.push_back(value);
+			}
+			srcData.push_back(temp);
+		}
+
+		//!¸üÐÂpImageOffset£¬µ¹ÖÃyÖáË³Ðò
+		for (int row = 0; row < nHeight; ++row)
+		{
+			for (int col = 0; col < nWidth; ++col)
+			{
+				pImageDataIn[(row * nWidth + col) * 3 + (i - 1)] = srcData[nHeight - 1 - row][col];
+
+			}
+		}
 	}
 
 	GDALClose(poDataset);
@@ -192,7 +216,8 @@ void OGCImageTileBygdal2tilesDotpy::UpdateTileChanged(const QString& fileNmaeNew
 		int nHeight;
 		int nChannels;
 		//QString strFilePath = "C:\\Users\\Administrator\\Desktop\\Geotiff_Deformation_Image_20201020125810.tiff";
-		bool readState = ReadImageData(&pImageData, nWidth, nHeight, nChannels, fileNmaeNew);
+		QString fileNmaeNewtemp = "D:\\data\\fsdsar\\Geotiff_Deformation_Image_20201020125810.tiff";
+		bool readState = ReadImageData(&pImageData, nWidth, nHeight, nChannels, fileNmaeNewtemp);
 		//char* strDestFilePath = "C:\\Users\\Administrator\\Desktop\\png2.png";
 		int nNewChannels = 3;
 
