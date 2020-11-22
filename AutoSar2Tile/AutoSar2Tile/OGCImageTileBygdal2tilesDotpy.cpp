@@ -58,6 +58,19 @@ bool ReadImageData(unsigned char **pImageData, int &nWidth, int &nHeight, int &n
 	nWidth = poDataset->GetRasterXSize();
 	nHeight = poDataset->GetRasterYSize();
 	nChannels = poDataset->GetRasterCount();
+	double adfGeoTransform[6] = { 0, //top left x
+		1, //w-e pixel resolution (can be negative)
+		0, //0
+		0, //top left y
+		0, //0
+		1  //n-s pixel resolution (can be negative)
+	};
+
+	if (poDataset->GetGeoTransform(adfGeoTransform) == CE_None)
+	{
+		Logger::Message(QString("TopLeft = (%1,%2)").arg(adfGeoTransform[0], 0, 'f', 6).arg(adfGeoTransform[3], 0, 'f', 6));
+		Logger::Message(QString("Pixel Resolution = (%1,%2)").arg(adfGeoTransform[1], 0, 'f', 6).arg(adfGeoTransform[5], 0, 'f', 6));
+	}
 
 	unsigned char *pImageDataIn = new unsigned char[nChannels * nWidth * nHeight];
 	*pImageData = pImageDataIn;
@@ -183,7 +196,7 @@ void OGCImageTileBygdal2tilesDotpy::UpdateTileChanged(const QString& fileNmaeNew
 		//char* strDestFilePath = "C:\\Users\\Administrator\\Desktop\\png2.png";
 		int nNewChannels = 3;
 
-		QString outpath = m_desDirectory + "\\" + imgname + ".tif";
+		QString outpath = m_desDirectory + "\\" + imgname + ".png";
 		std::string aa = outpath.toStdString();
 		char* strDestFilePath = (char* )aa.c_str();
 		bool saveState = WriteImageData(strDestFilePath, pImageData, nWidth, nHeight, nChannels, nNewChannels);
