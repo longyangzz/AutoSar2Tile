@@ -110,7 +110,17 @@ bool ReadImageData(unsigned char **pImageData, int &nWidth, int &nHeight, int &n
 		{
 			for (int col = 0; col < nWidth; ++col)
 			{
-				pImageDataIn[(row * nWidth + col) * 3 + (i - 1)] = srcData[nHeight - 1 - row][col];
+				//!旋转90度后的行列号
+				int newRow = abs(col * std::sin(DCCore::M_pi / 2) + row * std::cos(DCCore::M_pi / 2));
+				int newCol = abs(col * std::cos(DCCore::M_pi / 2) - row * std::sin(DCCore::M_pi / 2));
+
+				//归化到原来的 范围
+				newRow = (float)(nHeight-1) / (nWidth-1) * (nWidth-1 - newRow);
+				newCol = (float)(nWidth-1) / (nHeight-1) * (nHeight-1 - newCol);
+
+				/*x2 = x1 * cos(alpha) - y1 * sin(alpha);
+				y2 = x1 * sin(alpha) + y1 * cos(alpha);*/
+				pImageDataIn[(row * nWidth + col) * 3 + (i - 1)] = srcData[nHeight-1-newRow][newCol];
 
 			}
 		}
@@ -216,8 +226,8 @@ void OGCImageTileBygdal2tilesDotpy::UpdateTileChanged(const QString& fileNmaeNew
 		int nHeight;
 		int nChannels;
 		//QString strFilePath = "C:\\Users\\Administrator\\Desktop\\Geotiff_Deformation_Image_20201020125810.tiff";
-		QString fileNmaeNewtemp = "D:\\data\\fsdsar\\Geotiff_Deformation_Image_20201020125810.tiff";
-		bool readState = ReadImageData(&pImageData, nWidth, nHeight, nChannels, fileNmaeNewtemp);
+		//QString fileNmaeNewtemp = "D:\\data\\fsdsar\\Geotiff_Deformation_Image_20201020125810.tiff";
+		bool readState = ReadImageData(&pImageData, nWidth, nHeight, nChannels, fileNmaeNew);
 		//char* strDestFilePath = "C:\\Users\\Administrator\\Desktop\\png2.png";
 		int nNewChannels = 3;
 

@@ -37,8 +37,8 @@ int main(int argc, char *argv[])
 	//！ 绑定文件监视类，发送信号给数据处理类更新处理
 	QObject::connect(&fileMoniter, SIGNAL(sigCommitReconRequest(const QString&)), &tileFactory, SLOT(UpdateTileChanged(const QString&)));
 
-	OGCImageTileBygdal2tilesDotpy* aa = new OGCImageTileBygdal2tilesDotpy(nullptr);
-	aa->UpdateTileChanged("");
+	//OGCImageTileBygdal2tilesDotpy* aa = new OGCImageTileBygdal2tilesDotpy(nullptr);
+	//aa->UpdateTileChanged("");
 	//! 当前工作路径
 	QString curDirectory = QDir::toNativeSeparators(QCoreApplication::applicationDirPath());
 	Logger::Message(QStringLiteral("版权所有：北京富斯德"));
