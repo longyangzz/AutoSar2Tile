@@ -42,6 +42,8 @@ char* findImageTypeGDAL( char *pDstImgFileName)
 
 bool ReadImageData(unsigned char **pImageData, int &nWidth, int &nHeight, int &nChannels, const QString& strFilePath)
 {
+	bool isUpdateBackGround = true;
+
 	GDALAllRegister();
 	GDALDataset *poDataset = NULL;
 

@@ -210,7 +210,7 @@ QString CesiumTileByEntwine::TransformTxt2las(QString fileName)
 	arg.append(QString("-parse"));
 	arg.append(QString("xyzRGB"));
 	process->start(proPath, arg);
-	if (process->waitForFinished())
+	if (process->waitForFinished(-1))
 	{
 		Logger::Message(QStringLiteral("txt2las执行成功"));
 
@@ -228,7 +228,7 @@ QString CesiumTileByEntwine::TransformTxt2las(QString fileName)
 		arg.append(QString("-meter"));
 		arg.append(QString("-elevation_meter"));
 		process->start(prolas2lasPath, arg);
-		if (process->waitForFinished()) {
+		if (process->waitForFinished(-1)) {
 			Logger::Message(QStringLiteral("las2las执行成功"));
 		}
 		else {

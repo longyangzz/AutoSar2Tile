@@ -113,7 +113,19 @@ bool PointCloud::ReadFromFile(QString fileName) {
 			}
 
 			m_curScaleField->AddData(curScale);
-		}else if (lineList.size() >= 6) {
+		}
+		
+		if (lineList.size() == 3) {
+			double curScale = lineList[2].toDouble(&scientificNotation);
+			if (!m_curScaleField)
+			{
+				m_curScaleField = new ScalField("sar");
+			}
+
+			m_curScaleField->AddData(curScale);
+		}
+
+		if (lineList.size() >= 6) {
 			//!÷±Ω”rgbcolor∂¡»Î
 			RGBColor color = { lineList[3].toInt(&scientificNotation), lineList[4].toInt(&scientificNotation), lineList[5].toInt(&scientificNotation) };
 			m_rgbColors.push_back(color);

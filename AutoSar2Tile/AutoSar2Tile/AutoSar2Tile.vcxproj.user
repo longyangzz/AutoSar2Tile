@@ -4,11 +4,11 @@
     <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QTDIR>G:\library\qt\vs_2015_x64_570\5.7\msvc2015_64</QTDIR>
+    <QTDIR>G:\library\qt\Qt5.13.2\5.13.2\msvc2015_64</QTDIR>
     <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QTDIR>G:\library\qt\vs_2015_x64_570\5.7\msvc2015_64</QTDIR>
+    <QTDIR>G:\library\qt\Qt5.13.2\5.13.2\msvc2015_64</QTDIR>
     <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
