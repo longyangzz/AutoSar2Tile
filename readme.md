@@ -57,7 +57,7 @@ gdal2tiles切片xyz：可以使用3857，不识别CGCS
 
 ## 2.2 tif切片后的tile img怎么在cesium可视化
 
-![image-20200928201232223](H:\2.code\github\AutoSar2Tile\screenshot\image-openlayers.png)
+![image-20200928201232223](./screenshot/image-openlayers.png)
 
 1、输出的切片目录建立iis服务
 
@@ -102,7 +102,7 @@ viewer.camera.flyTo({
 
 原始数据格式
 
-![image-20201013114532650](H:\2.code\github\AutoSar2Tile\screenshot\image-csvdata.png)
+![image-20201013114532650](./screenshot/image-csvdata.png)
 
 提取有效数据列：EFG列是坐标，J列是位移
 
@@ -112,8 +112,8 @@ viewer.camera.flyTo({
 
 颜色阶数：50
 
-![image-20201013171439449](H:\2.code\github\AutoSar2Tile\screenshot\image-colorscale.png)
+![image-20201013171439449](./screenshot/image-colorscale.png)
 
 切片结果目录：
 
-![image-20201013171516227](H:\2.code\github\AutoSar2Tile\screenshot\image-csvcloud.png)
+![image-20201013171516227](./screenshot/image-csvcloud.png)
